@@ -20,7 +20,12 @@ const formSchema = z.object({
   password: z.string().min(6, "Hasło musi mieć conajmniej 6 znaków"),
 });
 
+import { useRouter } from "next/navigation";
+
+// ... imports
+
 export const LoginForm = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,6 +36,7 @@ export const LoginForm = () => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    router.push("/dashboard");
   }
 
   return (

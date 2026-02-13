@@ -1,4 +1,5 @@
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 export const Navbar = () => {
   return (
@@ -18,12 +19,14 @@ export const Navbar = () => {
         </p>
       </div>
       <div className="flex gap-3 items-center">
-        <Button
-          variant="ghost"
-          className="text-slate-400 hover:text-slate-50 hover:bg-slate-800"
-        >
-          Login
-        </Button>
+        <Link href="/login">
+          <Button
+            variant="ghost"
+            className="text-slate-400 hover:text-slate-50 hover:bg-slate-800"
+          >
+            Login
+          </Button>
+        </Link>
         <Button className="bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-600/20">
           Get Started
         </Button>

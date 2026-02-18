@@ -56,6 +56,7 @@ export function CreateEventDialog() {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    mode: "onSubmit", // Ensure validation only happens on submit
     defaultValues: {
       name: "",
       category: "",
@@ -84,6 +85,7 @@ export function CreateEventDialog() {
   const nextStep = async () => {
     const valid = await form.trigger(["name", "category"]);
     if (valid) {
+      form.clearErrors(["date", "price"]); // Clear specific errors for the next step just in case
       setStep(2);
     }
   };
@@ -96,6 +98,7 @@ export function CreateEventDialog() {
     <Dialog open={open} onOpenChange={(val) => {
         setOpen(val);
         if(!val) {
+            form.reset(); // Reset form when closing to clear validation state
             setTimeout(() => setStep(1), 300); // Reset step after closing animation
         }
     }}>
@@ -253,12 +256,21 @@ export function CreateEventDialog() {
                 <div /> /* Spacer */
               )}
 
-              {step === 1 ? (
-                <Button type="button" onClick={nextStep} className="bg-blue-600 hover:bg-blue-500 text-white">
+            {step === 1 ? (
+                <Button 
+                  type="button" 
+                  onClick={nextStep} 
+                  disabled={!form.watch("name") || !form.watch("category")} 
+                  className="bg-blue-600 hover:bg-blue-500 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                >
                   Next <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               ) : (
-                <Button type="submit" disabled={isLoading} className="bg-blue-600 hover:bg-blue-500 text-white">
+                <Button 
+                  type="submit" 
+                  disabled={isLoading || !form.watch("date") || !form.watch("price")} 
+                  className="bg-blue-600 hover:bg-blue-500 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                >
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Create Event
                 </Button>
